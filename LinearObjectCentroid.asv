@@ -3,13 +3,11 @@
 
 %Parameter P: A cell array of points
 %Parameter L: A cell array of Lines
+%Parameter A: A cell array of planes
 
-%Return point: A point that represents the closest point of intersection
-function point = PointLineIntersection( P, L )
+%Return point: A point that represents the centroid of all the objects
+function point = LinearObjectCentroid( P, L, A )
 
-% The idea is to minimize the dot product of the normal vectors with the
-% intersection point in the least squares sense
-% ( basePoint - point ) . u = ( basePoint - point ) . v = 0
 
 % For points, we want
 % point = point
@@ -21,6 +19,11 @@ for i = 1:numel(P)
     U = cat( 1, U, eye(3) );
     B = cat( 1, B, P{i}.point );
 end %for
+
+
+% The idea is to minimize the dot product of the normal vectors with the
+% intersection point in the least squares sense
+% ( basePoint - point ) . u = ( basePoint - point ) . v = 0
 
 for i = 1:numel(L)
     
@@ -53,6 +56,9 @@ for i = 1:numel(L)
     B = cat( 1, B, dot( L{i}.endPoint1, v ) ); 
     
 end %for
+
+% The idea is to minimize the dot product of the normal vector with the
+% centroid point in the least dq
 
 % Solve for point in the least squares sense
 point = ( U' * U ) \ U' * B;

@@ -9,7 +9,7 @@
 
 % Return ER: The standard error in the rotation matrix
 % Return ET: The standard error in the translation matrix
-function [ ER, ET ] = HyperplaneRegistrationValidate( maxGeo, geoFileName, logFileName, randomFileName, noise, repeat )
+function [ ER, ET ] = LinearObjectRegistrationValidateReferences( geo, geoFileName, logFileName, randomFileName, noise, repeat )
 
 % Initialize the error matrices
 ER = zeros( repeat, length( noise ) );
@@ -18,17 +18,17 @@ ET = zeros( repeat, length( noise ) );
 NUM_POINTS = 100;
 RANGE = 100;
 
-for i = 1:length( noise )
+for i = 1:length( geo )
     for j = 1:repeat
         
-        disp( [ 'Noise: ', num2str( noise(i) ), ', Iteration: ', num2str( j ) ] );
+        disp( [ 'References: ', num2str( geo(i) ), ', Iteration: ', num2str( j ) ] );
         
         % Generate random geometry
         
-        NR = maxGeo;
-        NP = randi( maxGeo );
-        NL = randi( maxGeo );
-        NA = randi( maxGeo );
+        NR = geo(i);
+        NP = randi( geo(i) );
+        NL = randi( geo(i) );
+        NA = randi( geo(i) );
         
         [ R P L A ] = RandomGeometry( NR, NP, NL, NA, geoFileName );
         
@@ -48,27 +48,28 @@ for i = 1:length( noise )
             DET = det( T(1:3,1:3) );
         end % while
         
+        %T = eye(4);
         
         % Generate random transformed collected points
         
-        RandomPoint( T, R, P, L, A, noise(i), NUM_POINTS, logFileName );
-        NoisePoint = RandomNoise( noise(i), NUM_POINTS, randomFileName );
+        RandomPoint( T, R, P, L, A, noise, NUM_POINTS, logFileName );
+        NoisePoint = RandomNoise( noise, NUM_POINTS, randomFileName );
         
         
         % Calculate the transform using the hyperplane registration algorithm
+        
         try
-            T_Calc = HyperplaneRegistration( geoFileName, logFileName, EstimateNoise( NoisePoint ) );
+            T_Calc = LinearObjectRegistration( geoFileName, logFileName, EstimateNoise( NoisePoint ) );
         catch exception
-           continue; 
+            continue;
         end
         
         % Determine the standard error of rotation and translation
-        
         IT = inv(T);
         
         ER(j,i) = sqrt( sum( sum( ( IT(1:3,1:3) - T_Calc(1:3,1:3) ) .^ 2 ) ) / 9 );
         ET(j,i) = sqrt( sum( sum( ( IT(1:3,4) - T_Calc(1:3,4) ) .^ 2 ) ) / 3 );
-        
+               
         disp( [ 'ER: ', num2str( ER(j,i) ), ', ET: ', num2str( ET(j,i) ) ] );
         
     end % for

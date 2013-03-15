@@ -5,26 +5,19 @@
 % Parameter RP: A cell array of points collected in the record log
 
 % Return R: The best rotation
-function R = RigidRegistration( GP, RP )
-
-GM = zeros( 3, 0 );
-RM = zeros( 3, 0 );
+function R = SphericalRegistration( GP, RP )
 
 for i=1:numel(GP)
-    GM(:,i) = GP{i}.point;
+    GP(i,:) = GP{i}.point;
 end %for
 
-for i=1:numel(RP)
-    RM(:,i) = RP{i}.point;
+for i=1:numel(P2)
+    R2(i,:) = P2{i}.point;
 end %for
-
-GM = bsxfun( @minus, GM, mean( GM, 2 ) );
-RM = bsxfun( @minus, RM, mean( RM, 2 ) );
-
 
 % Arun's method
 
-H = RM * GM';
+H = edata * mdata';
 
 [ U, ~, V ] = svd( H );
 

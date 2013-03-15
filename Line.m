@@ -5,8 +5,6 @@ classdef Line
     properties ( SetAccess = private )
         endPoint1;
         endPoint2;
-        param1;
-        param2;
         signature;
     end %properties
     
@@ -32,17 +30,6 @@ classdef Line
         function point = ProjectPoint( L, point )
             vector = point - L.endPoint1;
             point = dot( L.GetDirection(), vector ) * L.GetDirection() + L.endPoint1;            
-        end %function
-        
-        function L = Parameterize( L, point )
-            L.param1 = dot( L.endPoint1 - L.ProjectPoint( point ), L.GetDirection() );
-            L.param2 = dot( L.endPoint2 - L.ProjectPoint( point ), L.GetDirection() );
-        end %function
-        
-        function L = Deparameterize( L, point, p1, p2 )
-            direction = L.GetDirection(); % Must do this first - direction changes otherwise
-            L.endPoint1 = L.ProjectPoint( point ) + p1 * direction;
-            L.endPoint2 = L.ProjectPoint( point ) + p2 * direction;
         end %function
         
         function L = Signature( L, R ) % R is cell array of references

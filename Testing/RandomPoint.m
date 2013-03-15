@@ -187,7 +187,7 @@ for i = 1:numel(A)
         randParam2 = RANGE - 2 * randi( RANGE * RANGE ) / RANGE;
         
         % Now, move from the base point along the end points by params
-        point = A{i}.basePoint + randParam1 * ( A{i}.basePoint - A{i}.endPoint1 ) + randParam2 * ( A{i}.basePoint - A{i}.endPoint2 );
+        point = A{i}.basePoint + randParam1 * ( A{i}.basePoint - A{i}.endPoint1 ) / norm( A{i}.basePoint - A{i}.endPoint1 ) + randParam2 * ( A{i}.basePoint - A{i}.endPoint2 )  / norm( A{i}.basePoint - A{i}.endPoint2 );
         
         % Add some random noise to this point
         point = point + random( 'norm', 0, noise , size(point) );
