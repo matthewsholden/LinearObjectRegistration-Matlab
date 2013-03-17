@@ -20,35 +20,38 @@ R = init;
 % Iterative until the error measure converges
 while ( size(error,1) < 2 || abs( error(end) - error(end-1) ) > THRESHOLD )
     
-    % Apply the transformation to the empirical data
-    P_RLP_Trans = cell( size( P_RLP ) );
-    L_RLP_Trans = cell( size( L_RLP ) );
-    A_RLP_Trans = cell( size( A_RLP ) );
-    
-    % Find the closest model point to each empirical point
+    RecordLogPoints = cell( 0, 1 );
+    GeometryPoints_Closest = cell( 0, 1 );
+    % Find the closest model point to each transformed empirical point
     for i = 1:numel(P_RLP)
         for j = 1:size(P_RLP{i},1)
-            RecordLogPoints = cat( 1, RecordLogPoints, P_RLP{i}(j,:) );
-            GeometryPoints_Closest = cat( 1, GeometryPoints_Closest, P{i}.ProjectPoint( R * P_RLP{i}(j,:)' )' );
+            RecordLogPoints = cat( 1, RecordLogPoints, { Point( P_RLP{i}(j,:)' ) } );
+            GeometryPoints_Closest = cat( 1, GeometryPoints_Closest, { Point( P{i}.point ) } );
         end %for
     end %for
     for i = 1:numel(L_RLP)
         for j = 1:size(L_RLP{i},1)
-            RecordLogPoints = cat( 1, RecordLogPoints, L_RLP{i}(j,:) );
-            GeometryPoints_Closest = cat( 1, GeometryPoints_Closest, L{i}.ProjectPoint( L_RLP{i}(j,:) ) );
+            RecordLogPoints = cat( 1, RecordLogPoints, { Point( L_RLP{i}(j,:)' ) } );
+            GeometryPoints_Closest = cat( 1, GeometryPoints_Closest, { Point( L{i}.ProjectPoint( R * L_RLP{i}(j,:)' ) ) } );
         end %for
     end %for
     for i = 1:numel(A_RLP)
         for j = 1:size(A_RLP{i},1)
-            RecordLogPoints = cat( 1, RecordLogPoints, A_RLP{i}(j,:) );
-            GeometryPoints_Closest = cat( 1, GeometryPoints_Closest, A{i}.ProjectPoint( A_RLP{i}(j,:) ) );
+            RecordLogPoints = cat( 1, RecordLogPoints, { Point( A_RLP{i}(j,:) ) } );
+            GeometryPoints_Closest = cat( 1, GeometryPoints_Closest, { Point( A{i}.ProjectPoint( R * A_RLP{i}(j,:)' ) ) } );
         end %for
     end %for
     
     % Calculate the registration    
-    R = sreg( GeometryPoints_Closest, RecordLogPoints );
+    R = SphericalRegistration( GeometryPoints_Closest, RecordLogPoints );
     
-    % Calculate the error    
-    error = cat( 1, error, sum( sum ( ( GeometryPoints_Closest - D * RecordLogPoints ) .^ 2 ) ) );
+    % Calculate the error
+    currError = 0;
+    R
+    RecordLogPoints{1}.point
+    for i = 1:numel(RecordLogPoints)
+        currError = currError + sum ( ( GeometryPoints_Closest{i}.point - R * RecordLogPoints{i}.point ) .^ 2 );
+    end %for
+    error = cat( 1, error, currError );
     
 end %for

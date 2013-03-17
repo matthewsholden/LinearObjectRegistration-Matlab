@@ -2,7 +2,7 @@
 % of points
 
 % Parameter LO: The linear object
-% Parameter points: The set of points (possibly containing outliers)
+% Parameter points: A set of points (possibly containing outliers)
 
 % Return filterPoints: The set of points with no outliers
 function filterPoints = RemoveOutliers( LO, points )
@@ -24,5 +24,11 @@ while ( changed )
     stdev = std( distances );
     
     filterPoints = filterPoints( distances < THRESHOLD * stdev, : );
+    
+    if ( numel(distances) ~= numel( distances < THRESHOLD * stdev ) )
+        changed = true;
+    else
+        changed = false;
+    end %if
     
 end %while

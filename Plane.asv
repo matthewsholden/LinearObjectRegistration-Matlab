@@ -43,10 +43,8 @@ classdef Plane
         end %function
         
         function A = Translate( A, vector )
-            A.basePoint = A.basePoint + vector;
-            A.endPoint1 = A.endPoint1 + vector;
-            A.endPoint2 = A.endPoint2 + vector;
-        end %function
+            
+        end %func
 
     end %methods
     

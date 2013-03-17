@@ -18,6 +18,10 @@ classdef Reference
             distance = norm( R.point - point );
         end %function
         
+        function R = Translate( R, vector )
+            R.point = R.point + vector;
+        end %function
+        
     end %methods
     
 end %classdef

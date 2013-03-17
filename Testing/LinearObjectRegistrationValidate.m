@@ -69,7 +69,7 @@ for i = 1:length( noise )
         
         ER(j,i) = sqrt( sum( sum( ( IT(1:3,1:3) - T_Calc(1:3,1:3) ) .^ 2 ) ) / 9 );
         ET(j,i) = sqrt( sum( sum( ( IT(1:3,4) - T_Calc(1:3,4) ) .^ 2 ) ) / 3 );
-               
+        
         disp( [ 'ER: ', num2str( ER(j,i) ), ', ET: ', num2str( ET(j,i) ) ] );
         
     end % for

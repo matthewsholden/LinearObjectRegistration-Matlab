@@ -39,6 +39,11 @@ classdef Line
             end %for
         end %function
         
+        function L = Translate( L, vector )
+            L.endPoint1 = L.endPoint1 + vector;
+            L.endPoint2 = L.endPoint2 + vector;
+        end %function
+        
     end %methods
     
     

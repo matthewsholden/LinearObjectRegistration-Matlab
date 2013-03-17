@@ -24,6 +24,10 @@ classdef Point
             end %for
         end %function
         
+        function P = Translate( P, vector )
+            P.point = P.point + vector;
+        end %function
+        
     end %methods
     
     
