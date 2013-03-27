@@ -18,7 +18,6 @@ for i=1:numel(RP)
     RM(:,i) = RP{i}.point;
 end %for
 
-
 % Arun's method
 
 H = RM * GM';

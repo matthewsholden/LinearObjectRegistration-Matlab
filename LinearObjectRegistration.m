@@ -236,6 +236,8 @@ RecordLogPoints = cat( 1, RecordLogPoints, RPBP );
 RecordLogPoints = cat( 1, RecordLogPoints, RADV );
 RecordLogPoints = cat( 1, RecordLogPoints, RLDV );
 
+%disp( [ 'Number Points: ', num2str(length(XYZP{1})), ', Number Lines: ', num2str(length(XYZL{1})), ', Number Planes: ', num2str(length(XYZA{1})) ] );
+
 
 % Now, finally, perform point-to-point registration
 RecordLogToGeometryRotation = SphericalRegistration( GeometryPoints, RecordLogPoints );
