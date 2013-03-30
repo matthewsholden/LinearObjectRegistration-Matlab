@@ -50,22 +50,22 @@ docRootNode = docNode.getDocumentElement();
 for i = 1:NR
     reference = docNode.createElement('Reference');
     reference.setAttribute( 'Name', [ 'Reference' , num2str(i) ] );
-    reference.setAttribute( 'Point', num2str( R{i}.point' ) );
+    reference.setAttribute( 'BasePoint', num2str( R{i}.point' ) );
     docRootNode.appendChild( reference );
 end %for
 
 for i = 1:NP
     point = docNode.createElement('Point');
     point.setAttribute( 'Name', [ 'Point' , num2str(i) ] );
-    point.setAttribute( 'Point', num2str( P{i}.point' ) );
+    point.setAttribute( 'BasePoint', num2str( P{i}.point' ) );
     docRootNode.appendChild( point );
 end %for
 
 for i = 1:NL
     line = docNode.createElement('Line');
     line.setAttribute( 'Name', [ 'Line' , num2str(i) ] );
-    line.setAttribute( 'EndPoint1', num2str( L{i}.endPoint1' ) );
-    line.setAttribute( 'EndPoint2', num2str( L{i}.endPoint2' ) );
+    line.setAttribute( 'BasePoint', num2str( L{i}.endPoint1' ) );
+    line.setAttribute( 'EndPoint', num2str( L{i}.endPoint2' ) );
     docRootNode.appendChild( line );
 end %for
 

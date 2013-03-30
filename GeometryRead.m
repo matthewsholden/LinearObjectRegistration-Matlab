@@ -39,7 +39,7 @@ for i = 1:2:( Hyperplanes.getLength - 1 )
             if ( strcmp( Current.item(j).getName(), 'Name' ) )
                 name = Current.item(j).getValue();
             end %if
-            if ( strcmp( Current.item(j).getName(), 'Point' ) )
+            if ( strcmp( Current.item(j).getName(), 'BasePoint' ) )
                 point = str2num( Current.item(j).getValue() )';
             end %if
                     
@@ -55,7 +55,7 @@ for i = 1:2:( Hyperplanes.getLength - 1 )
                 
         for j = 0:( Current.getLength - 1 )
             
-            if ( strcmp( Current.item(j).getName(), 'Point' ) )
+            if ( strcmp( Current.item(j).getName(), 'BasePoint' ) )
                 point = str2num( Current.item(j).getValue() )';
             end %if
                     
@@ -73,10 +73,10 @@ for i = 1:2:( Hyperplanes.getLength - 1 )
                 
         for j = 0:( Current.getLength - 1 )
             
-            if ( strcmp( Current.item(j).getName(), 'EndPoint1' ) )
+            if ( strcmp( Current.item(j).getName(), 'BasePoint' ) )
                 endPoint1 = str2num( Current.item(j).getValue() )';
             end %if
-            if ( strcmp( Current.item(j).getName(), 'EndPoint2' ) )
+            if ( strcmp( Current.item(j).getName(), 'EndPoint' ) )
                 endPoint2 = str2num( Current.item(j).getValue() )';
             end %if
                     

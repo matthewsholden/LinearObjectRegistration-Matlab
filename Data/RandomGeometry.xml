@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Geometry>
-   <Reference Name="Reference1" Point="-96.2488      33.5233     -15.0436"/>
-   <Reference Name="Reference2" Point="-26.0406      68.7825      31.0267"/>
-   <Reference Name="Reference3" Point="65.8953     -95.8228     -83.1211"/>
-   <Reference Name="Reference4" Point="93.5863      21.9698      74.8976"/>
-   <Point Name="Point1" Point="-54.5144     -90.2081      94.4168"/>
-   <Line EndPoint1="82.4915     -53.9206     -75.6107" EndPoint2="19.5263       49.274      2.70035" Name="Line1"/>
-   <Plane BasePoint="43.3747      79.7767     -69.0965" EndPoint1="31.8557      35.3451      82.2146" EndPoint2="64.5871     -64.7085     -31.0782" Name="Plane1"/>
+   <Reference BasePoint="-82.6752     -26.4718      80.4919" Name="Reference1"/>
+   <Reference BasePoint="44.3004      -9.3763     -91.5014" Name="Reference2"/>
+   <Reference BasePoint="-92.9777      68.4774     -94.1186" Name="Reference3"/>
+   <Reference BasePoint="-91.4334      2.92487     -60.0561" Name="Reference4"/>
+   <Point BasePoint="71.6227      15.6477     -83.1471" Name="Point1"/>
+   <Point BasePoint="-58.4415     -91.8985     -31.1481" Name="Point2"/>
+   <Point BasePoint="92.8577     -69.8259     -86.7986" Name="Point3"/>
+   <Point BasePoint="-35.747      -51.548     -48.6265" Name="Point4"/>
+   <Line BasePoint="21.5546     -31.0956      65.7627" EndPoint="-41.2092      93.6334      44.6154" Name="Line1"/>
+   <Line BasePoint="90.7657      80.5736     -64.6916" EndPoint="-38.9657      36.5801     -90.0444" Name="Line2"/>
+   <Line BasePoint="93.1108      12.2511      23.6883" EndPoint="-53.1034       -59.04      62.6255" Name="Line3"/>
+   <Line BasePoint="2.04712      10.8828     -29.2626" EndPoint="-41.873     -50.9373       44.795" Name="Line4"/>
+   <Plane BasePoint="-35.9405     -31.0196      67.4777" EndPoint1="76.2005      0.32719     -91.9488" EndPoint2="31.9229     -17.0536      55.2376" Name="Plane1"/>
 </Geometry>
