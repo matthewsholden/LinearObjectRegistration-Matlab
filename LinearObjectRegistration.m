@@ -8,6 +8,8 @@
 %Return ReferenceToRASTransform: The ReferenceToRASTransform
 function RecordLogToGeometryTransform = LinearObjectRegistration( GeometryFileName, RecordLogFileName, noise )
 
+DIRECTION_SCALE = 100;
+
 % Read from file and recover all the hyperplanes
 [ GR GP GL GA ] = GeometryRead( GeometryFileName );
 
@@ -184,20 +186,20 @@ RLDV = cell( 0, 1 );
 
 
 for i = 1:numel(GAM)
-    GADV = cat( 1, GADV, { Point( GAM{i}.GetNormal() ) } );
+    GADV = cat( 1, GADV, { Point( DIRECTION_SCALE * GAM{i}.GetNormal() ) } );
 end %for
 for i = 1:numel(GLM)
-    GLDV = cat( 1, GLDV, { Point( GLM{i}.GetDirection() ) } );
+    GLDV = cat( 1, GLDV, { Point( DIRECTION_SCALE * GLM{i}.GetDirection() ) } );
 end %for
 
 for i = 1:numel(RAM)
     % Produce the two candidate vectors
-    RADV_Temp{1} = Point( RABP{i}.point + RAM{i}.GetNormal() );
+    RADV_Temp{1} = Point( RABP{i}.point + DIRECTION_SCALE * RAM{i}.GetNormal() );
     RADV_Temp{1} = RADV_Temp{1}.Signature( RRM );
-    RADV_Temp{2} = Point( RABP{i}.point - RAM{i}.GetNormal() );
+    RADV_Temp{2} = Point( RABP{i}.point - DIRECTION_SCALE * RAM{i}.GetNormal() );
     RADV_Temp{2} = RADV_Temp{2}.Signature( RRM );
     
-    GADV_Temp{1} = Point( GABP{i}.point + GAM{i}.GetNormal() );
+    GADV_Temp{1} = Point( GABP{i}.point + DIRECTION_SCALE * GAM{i}.GetNormal() );
     GADV_Temp{1} = GADV_Temp{1}.Signature( GRM );
     
     [ ~, RADV_Match ] = SignatureMatch( GADV_Temp, RADV_Temp );
@@ -206,12 +208,12 @@ for i = 1:numel(RAM)
 end %for
 for i = 1:numel(GLM)
         % Produce the two candidate vectors
-    RLDV_Temp{1} = Point( RLBP{i}.point + RLM{i}.GetDirection() );
+    RLDV_Temp{1} = Point( RLBP{i}.point + DIRECTION_SCALE * RLM{i}.GetDirection() );
     RLDV_Temp{1} = RLDV_Temp{1}.Signature( RRM );
-    RLDV_Temp{2} = Point( RLBP{i}.point - RLM{i}.GetDirection() );
+    RLDV_Temp{2} = Point( RLBP{i}.point - DIRECTION_SCALE * RLM{i}.GetDirection() );
     RLDV_Temp{2} = RLDV_Temp{2}.Signature( RRM );
     
-    GLDV_Temp{1} = Point( GLBP{i}.point + GLM{i}.GetDirection() );
+    GLDV_Temp{1} = Point( GLBP{i}.point + DIRECTION_SCALE * GLM{i}.GetDirection() );
     GLDV_Temp{1} = GLDV_Temp{1}.Signature( GRM );
     
     [ ~, RLDV_Match ] = SignatureMatch( GLDV_Temp, RLDV_Temp );
@@ -241,7 +243,7 @@ RecordLogPoints = cat( 1, RecordLogPoints, RLDV );
 
 % Now, finally, perform point-to-point registration
 RecordLogToGeometryRotation = SphericalRegistration( GeometryPoints, RecordLogPoints );
-RecordLogToGeometryRotation = LinearObjectICP( GPM, GLM, GAM, XYZP, XYZL, XYZA, RecordLogToGeometryRotation );
+%RecordLogToGeometryRotation = LinearObjectICP( GPM, GLM, GAM, XYZP, XYZL, XYZA, RecordLogToGeometryRotation );
 
 RecordLogToGeometryTranslation = GeometryCentroid - RecordLogToGeometryRotation * RecordLogCentroid;
 RecordLogToGeometryTransform = eye(4);

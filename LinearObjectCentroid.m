@@ -62,7 +62,7 @@ end %for
 % centroid point in the least sqaures sense
 % ( basePoint - point ) . n = 0 
 
-for i = numel(A)
+for i = 1:numel(A)
     
     U = cat( 1, U, A{i}.GetNormal()' );
     

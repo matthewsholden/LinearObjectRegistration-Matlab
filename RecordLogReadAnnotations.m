@@ -114,6 +114,10 @@ for i = 1:size(X,1)
             refCount = refCount + 1;
         end %if
         if ( j == size(TM,1) || TM(j+1) > TX(i) )
+            if ( TM(j) > TX(i) )
+                cellCount = 0;
+                refCount = 0;
+            end %if
             if ( strcmp( M(j) , 'off' ) )
                 cellCount = 0;
                 refCount = 0;
