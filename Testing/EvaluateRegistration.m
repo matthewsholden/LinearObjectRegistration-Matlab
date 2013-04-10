@@ -5,7 +5,7 @@
 %Parameter transform: The transform such that geo = transform * record
 
 %Return avgError: The average error in the registration
-function avgError = EvaluateRegistration( GeometryFileName, RecordLogFileName, transform )
+function rmsError = EvaluateRegistration( GeometryFileName, RecordLogFileName, transform )
 
 % Read from file and recover all the hyperplanes
 [ ~, GP, GL, GA ] = GeometryRead( GeometryFileName );
@@ -18,7 +18,7 @@ function avgError = EvaluateRegistration( GeometryFileName, RecordLogFileName, t
 %[ XYZ, RXYZ ] = HyperplaneExtract( XYZ, size(GR,1) );
 
 
-avgError = 0;
+rmsError = 0;
 Count = 0;
 
 for i = 1:numel(XYZ) 
@@ -50,9 +50,9 @@ for i = 1:numel(XYZ)
             end %if
         end %for
         
-        avgError = avgError + minError;
+        rmsError = rmsError + minError ^ 2;
         Count = Count + 1;
 
     end %for
 end %for
-avgError = avgError / Count;
+rmsError = sqrt( rmsError / Count );

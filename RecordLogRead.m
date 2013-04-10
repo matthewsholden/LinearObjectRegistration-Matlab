@@ -16,6 +16,9 @@ Records = TransformRecorderLog.getChildNodes();
 TX = zeros(0,1);
 X = zeros(0,3);
 
+prevMatrix = zeros( 1, 16 );
+ROTATION_THRESHOLD = 0.005;
+TRANSLATION_THRESHOLD = 0.5;
 
 % Apparently only every other child node has anything in it
 for i = 1:2:( Records.getLength - 1 )
@@ -50,6 +53,16 @@ for i = 1:2:( Records.getLength - 1 )
             end %if
             
         end %for
+        
+        rotationChange = norm ( matrix([ 1:3 5:7 9:11 ]) - prevMatrix([ 1:3 5:7 9:11 ]) );
+        translationChange = norm( matrix([ 4 8 12 ]) - prevMatrix([ 4 8 12 ]) );
+        
+        if ( rotationChange < ROTATION_THRESHOLD && translationChange < TRANSLATION_THRESHOLD )
+            prevMatrix = matrix;
+            continue;
+        end %if
+        
+        prevMatrix = matrix;
         
         if ( strcmp( type, 'transform' ) )
             TX = cat( 1, TX, time );

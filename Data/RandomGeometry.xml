@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Geometry>
-   <Reference BasePoint="10.8826      -17.073      32.6661" Name="Reference1"/>
-   <Reference BasePoint="-13.0157     -96.8313      94.1724" Name="Reference2"/>
-   <Reference BasePoint="31.4503      87.8671      48.4295" Name="Reference3"/>
-   <Reference BasePoint="3.63513     -50.9336      84.4773" Name="Reference4"/>
-   <Point BasePoint="-14.7517     -89.7943     -80.8616" Name="Point1"/>
-   <Point BasePoint="-2.30364      -90.155     -41.5521" Name="Point2"/>
-   <Point BasePoint="13.7347     -83.9008      33.4337" Name="Point3"/>
-   <Point BasePoint="42.8672      46.1827      1.29568" Name="Point4"/>
-   <Line BasePoint="3.26818        88.11      46.6306" EndPoint="87.5567     -35.3116     -18.8359" Name="Line1"/>
-   <Line BasePoint="-0.261631     -1.51985     -40.3832" EndPoint="-63.4428      51.9392     -2.38877" Name="Line2"/>
-   <Plane BasePoint="-41.7481       46.161      47.3227" EndPoint1="-70.3546     -92.5179      74.6124" EndPoint2="-61.4552      70.8632     -59.3063" Name="Plane1"/>
-   <Plane BasePoint="32.1977     -4.85646     -32.7213" EndPoint1="73.8784     -74.7847      -3.8594" EndPoint2="-76.9286     -21.7661     -21.3406" Name="Plane2"/>
-   <Plane BasePoint="12.8497     -30.3932      18.5979" EndPoint1="18.2249      66.9287      1.00097" EndPoint2="26.5053      33.6482      -53.556" Name="Plane3"/>
+   <Reference BasePoint="11.19      28.6631     -89.8472" Name="Reference1"/>
+   <Reference BasePoint="-42.6376      11.7902      54.6485" Name="Reference2"/>
+   <Reference BasePoint="-52.4956      16.4354     -80.2248" Name="Reference3"/>
+   <Reference BasePoint="75.0895      26.4853      22.3856" Name="Reference4"/>
+   <Reference BasePoint="98.936      96.9563      92.9085" Name="Reference5"/>
+   <Reference BasePoint="2.40847      76.1332      -2.2356" Name="Reference6"/>
+   <Reference BasePoint="61.7034     -76.1585     -37.6086" Name="Reference7"/>
+   <Reference BasePoint="63.4239      51.3895      28.7467" Name="Reference8"/>
+   <Reference BasePoint="-62.0398     -47.3938      50.3152" Name="Reference9"/>
+   <Reference BasePoint="60.3997     -59.8397       23.815" Name="Reference10"/>
+   <Point BasePoint="92.735     -8.84314      55.2231" Name="Point1"/>
+   <Point BasePoint="21.91     -34.0879      -97.924" Name="Point2"/>
+   <Point BasePoint="-1.62613     -53.1738     -21.8883" Name="Point3"/>
+   <Point BasePoint="-29.1787      66.7934     -68.3192" Name="Point4"/>
+   <Point BasePoint="21.1851      10.2394     -36.9559" Name="Point5"/>
+   <Line BasePoint="-31.9094      79.8655     -94.2439" EndPoint="-47.6928       11.563     -2.49824" Name="Line1"/>
+   <Line BasePoint="91.4945      2.74934     -1.65698" EndPoint="4.4481      25.2796      -80.165" Name="Line2"/>
+   <Line BasePoint="-39.2831      7.34512      27.4787" EndPoint="83.6261      85.1194      76.1355" Name="Line3"/>
+   <Plane BasePoint="-98.9023     -24.6803     -19.5979" EndPoint1="54.976      74.6405     -99.3624" EndPoint2="33.5237      98.7732     -63.3457" Name="Plane1"/>
+   <Plane BasePoint="-76.6055      81.2691      7.23424" EndPoint1="74.9884     -31.7184      24.6005" EndPoint2="86.8059      50.0409      10.2459" Name="Plane2"/>
+   <Plane BasePoint="94.2205      25.7379      77.1539" EndPoint1="-46.7612      28.3789     -49.7515" EndPoint2="77.0061      89.5227     -8.68071" Name="Plane3"/>
+   <Plane BasePoint="45.3422      65.2125      85.3148" EndPoint1="-28.1376     -59.5733      58.6233" EndPoint2="89.8512      80.7241     -71.8003" Name="Plane4"/>
+   <Plane BasePoint="42.5544      57.7852     -13.3499" EndPoint1="78.608     -37.6616      -14.351" EndPoint2="-30.6758      54.2722      55.0604" Name="Plane5"/>
+   <Plane BasePoint="23.78     -66.1726      3.23224" EndPoint1="6.91763      -25.353    -0.238413" EndPoint2="12.5934     -37.8888      43.1413" Name="Plane6"/>
+   <Plane BasePoint="66.9596     -78.0084     -9.61356" EndPoint1="86.4962     -77.8234     -22.9719" EndPoint2="-57.4379      -42.588      43.4817" Name="Plane7"/>
 </Geometry>

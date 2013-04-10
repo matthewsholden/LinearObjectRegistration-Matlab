@@ -9,6 +9,9 @@
 %group elements
 function [ SM, BM ] = SignatureMatch( S, B )
 
+% 1 centimeter is reasonable uncertainty in reference
+REFERENCE_UNCERTAINTY = 10;
+
 matches = zeros( numel(S), 1 );
 problems = zeros( numel(S), 1 );
 
@@ -29,8 +32,9 @@ for i = 1:numel(S)
         end %if
     end %for
     
-    if ( norm( S{i}.signature - B{minB}.signature ) > 1 )
+    if ( norm( S{i}.signature - B{minB}.signature ) > REFERENCE_UNCERTAINTY )
         warning('Poor signature match');
+        problems(k) = 1;
     end %if
     
     matches(i) = minB;

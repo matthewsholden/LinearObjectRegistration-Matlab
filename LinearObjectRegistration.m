@@ -15,10 +15,10 @@ DIRECTION_SCALE = 100;
 
 % Read from file the recordlog
 % Pre-segmented
-[ XYZ, RXYZ ] = RecordLogReadAnnotations( RecordLogFileName );
+%[ XYZ, RXYZ ] = RecordLogReadAnnotations( RecordLogFileName );
 % Not pre-segmented
-%[ XYZ ] = RecordLogRead( RecordLogFileName );
-%[ XYZ, RXYZ ] = HyperplaneExtract( XYZ, size(GR,1) );
+[ XYZ ] = RecordLogRead( RecordLogFileName );
+[ RXYZ, XYZ, DOF ] = LinearObjectExtract( XYZ, size(GR,1) );
 
 % Find equations of the linear objects
 RR = cell( 0, 1 );
@@ -34,7 +34,7 @@ XYZA = cell( 0, 1 );
 
 for i = 1:numel(XYZ)
     
-    LO = LinearObjectLeastSquares( XYZ{i}, noise );
+    LO = LinearObjectLeastSquares( XYZ{i}, DOF(i) );
     
     if ( isa( LO, 'Point' ) )
         RP = cat( 1, RP, {LO} );
@@ -51,7 +51,7 @@ end %for
 
 for i = 1:numel(RXYZ)
     
-    LO = LinearObjectLeastSquares( RXYZ{i}, noise  );
+    LO = LinearObjectLeastSquares( RXYZ{i}, 0 );
     
     if ( isa( LO, 'Point' ) )
         RR = cat( 1, RR, { Reference( '1', LO.point ) } );
@@ -243,7 +243,7 @@ RecordLogPoints = cat( 1, RecordLogPoints, RLDV );
 
 % Now, finally, perform point-to-point registration
 RecordLogToGeometryRotation = SphericalRegistration( GeometryPoints, RecordLogPoints );
-%RecordLogToGeometryRotation = LinearObjectICP( GPM, GLM, GAM, XYZP, XYZL, XYZA, RecordLogToGeometryRotation );
+RecordLogToGeometryRotation = LinearObjectICP( GPM, GLM, GAM, XYZP, XYZL, XYZA, RecordLogToGeometryRotation );
 
 RecordLogToGeometryTranslation = GeometryCentroid - RecordLogToGeometryRotation * RecordLogCentroid;
 RecordLogToGeometryTransform = eye(4);
