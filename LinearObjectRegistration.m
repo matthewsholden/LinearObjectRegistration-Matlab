@@ -60,10 +60,10 @@ for i = 1:numel(RXYZ)
     
 end %for
 
-% disp( [ 'References: ', num2str( size(RR,1) ) ] );
-% disp( [ 'Points: ', num2str( size(RP,1) ) ] );
-% disp( [ 'Lines: ', num2str( size(RL,1) ) ] );
-% disp( [ 'Planes: ', num2str( size(RA,1) ) ] );
+disp( [ 'References: ', num2str( size(RR,1) ) ] );
+disp( [ 'Points: ', num2str( size(RP,1) ) ] );
+disp( [ 'Lines: ', num2str( size(RL,1) ) ] );
+disp( [ 'Planes: ', num2str( size(RA,1) ) ] );
 
 
 % Find the signatures for all planes, lines and points in both
@@ -89,9 +89,9 @@ end %for
 
 
 % Do some matching
-[ RAM, GAM ] = SignatureMatch( RA, GA );
-[ RLM, GLM ] = SignatureMatch( RL, GL );
-[ RPM, GPM ] = SignatureMatch( RP, GP );
+[ GAM, RAM ] = LinearObjectMatch( GR, RR, GA, RA );
+[ GLM, RLM ] = LinearObjectMatch( GR, RR, GL, RL );
+[ GPM, RPM ] = LinearObjectMatch( GR, RR, GP, RP );
 RRM = RR;
 GRM = GR;
 % Note: The order of the recorded cell arrays is not changed, so XYZ cell
@@ -185,13 +185,8 @@ RADV = cell( 0, 1 );
 RLDV = cell( 0, 1 );
 
 
-for i = 1:numel(GAM)
-    GADV = cat( 1, GADV, { Point( DIRECTION_SCALE * GAM{i}.GetNormal() ) } );
-end %for
-for i = 1:numel(GLM)
-    GLDV = cat( 1, GLDV, { Point( DIRECTION_SCALE * GLM{i}.GetDirection() ) } );
-end %for
 
+% Observe that numel( GAM ) == numel( RAM )
 for i = 1:numel(RAM)
     % Produce the two candidate vectors
     RADV_Temp{1} = Point( RABP{i}.point + DIRECTION_SCALE * RAM{i}.GetNormal() );
@@ -204,10 +199,18 @@ for i = 1:numel(RAM)
     
     [ ~, RADV_Match ] = SignatureMatch( GADV_Temp, RADV_Temp );
     
-    RADV = cat( 1, RADV, { Point( RADV_Match{1}.point - RABP{i}.point ) } );
+    % Only add direction vector if there is a convincing match
+    for j = 1:numel( GRM )
+        dotCheck = dot( GAM{i}.GetNormal(), GABP{i}.point - GRM{j}.point );
+        if ( abs( dotCheck ) > noise )
+            RADV = cat( 1, RADV, { Point( RADV_Match{1}.point - RABP{i}.point ) } );
+            GADV = cat( 1, GADV, { Point( DIRECTION_SCALE * GAM{i}.GetNormal() ) } );
+        end
+    end
+    
 end %for
 for i = 1:numel(GLM)
-        % Produce the two candidate vectors
+    % Produce the two candidate vectors
     RLDV_Temp{1} = Point( RLBP{i}.point + DIRECTION_SCALE * RLM{i}.GetDirection() );
     RLDV_Temp{1} = RLDV_Temp{1}.Signature( RRM );
     RLDV_Temp{2} = Point( RLBP{i}.point - DIRECTION_SCALE * RLM{i}.GetDirection() );
@@ -218,7 +221,15 @@ for i = 1:numel(GLM)
     
     [ ~, RLDV_Match ] = SignatureMatch( GLDV_Temp, RLDV_Temp );
     
-    RLDV = cat( 1, RLDV, { Point( RLDV_Match{1}.point - RLBP{i}.point ) } );
+    % Only add direction vector if there is a convincing match
+    for j = 1:numel( GRM )
+        dotCheck = dot( GLM{i}.GetDirection(), GLBP{i}.point - GRM{j}.point );
+        if (  abs( dotCheck ) > noise )
+            RLDV = cat( 1, RLDV, { Point( RLDV_Match{1}.point - RLBP{i}.point ) } );
+            GLDV = cat( 1, GLDV, { Point( DIRECTION_SCALE * GLM{i}.GetDirection() ) } );
+        end
+    end
+    
 end %for
 
 

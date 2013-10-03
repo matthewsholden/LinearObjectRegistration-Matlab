@@ -53,3 +53,6 @@ while ( size(error,1) < 2 || abs( error(end) - error(end-1) ) > THRESHOLD )
     error = cat( 1, error, currError );
     
 end %for
+
+rmsError = sqrt( error( end ) / numel( RecordLogPoints ) );
+rmsError
