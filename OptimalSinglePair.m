@@ -3,10 +3,11 @@
 
 %Parameter G: A cell array of geometry linear objects
 %Parameter R: A cell array of recorded linear objects
+%Parameter noise: The noise associated with collection
 
 %Return bestG: The index of the value in G which is part of the pair
 %Return bestR: The index of the value in R which is part of the pair
-function [ bestG, bestR ] = OptimalSinglePair( G, R )
+function [ bestG, bestR ] = OptimalSinglePair( G, R, noise )
 
 % Compose into a matrix
 matG = zeros( 0, length( G{1}.signature ) );
@@ -28,7 +29,7 @@ stdev = zeros( 1, size( matG, 2 ) );
 for d = 1:size( matG, 2 )
     dist = pdist2( matR( :, d ), matG( :, d ) );
     bestMatch = min( dist, [], 2 );
-    stdev(d) = sqrt( sum( bestMatch ) / size( matR, 1 ) );
+    stdev(d) = noise; %sqrt( sum( bestMatch ) / size( matR, 1 ) );
 end
 
 % Assume each recorded point has a normal distribution about which its

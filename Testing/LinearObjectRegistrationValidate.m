@@ -73,8 +73,9 @@ for i = 1:length( noise )
         
         IT = inv(T);
         
-        ER(j,i) = sqrt( sum( sum( ( IT(1:3,1:3) - T_Calc(1:3,1:3) ) .^ 2 ) ) / 9 );
-        ET(j,i) = sqrt( sum( sum( ( IT(1:3,4) - T_Calc(1:3,4) ) .^ 2 ) ) / 3 );
+        % ER(j,i) = sqrt( sum( sum( ( IT(1:3,1:3) - T_Calc(1:3,1:3) ) .^ 2 ) ) / 9 );
+        ER(j,i) = CompareRotations( IT, T_Calc );
+        ET(j,i) = norm( IT(1:3,4) - T_Calc(1:3,4) );
         
         disp( [ 'ER: ', num2str( ER(j,i) ), ', ET: ', num2str( ET(j,i) ) ] );
         

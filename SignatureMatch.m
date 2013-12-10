@@ -37,6 +37,11 @@ for i = 1:numel(S)
     
 end %for
 
+% % For TESTING only!!!
+% if ( ~issorted( matches ) && ~issorted( flipud( matches ) ) && numel(S) == numel(B) )
+%     disp( matches );
+%     error( 'Matching', 'Matching failed!' );
+% end
 
 
 % Remove all the points that are causing a problem (because we don't know

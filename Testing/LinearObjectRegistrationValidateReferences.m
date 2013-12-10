@@ -7,13 +7,11 @@
 % Parameter noise: A vector of noise amplitudes
 % Parameter repeat: How many times to repeat calculate (so we can average)
 
-% Return ER: The standard error in the rotation matrix
-% Return ET: The standard error in the translation matrix
-function [ ER, ET ] = LinearObjectRegistrationValidateReferences( geo, geoFileName, logFileName, randomFileName, noise, repeat )
+% Return fails: The number of times the matching failed
+function fails = LinearObjectRegistrationValidateReferences( geo, geoFileName, logFileName, randomFileName, noise, repeat )
 
 % Initialize the error matrices
-ER = zeros( repeat, length( noise ) );
-ET = zeros( repeat, length( noise ) );
+fails = zeros( repeat, length( geo ) );
 
 NUM_POINTS = 100;
 RANGE = 100;
@@ -26,9 +24,9 @@ for i = 1:length( geo )
         % Generate random geometry
         
         NR = geo(i);
-        NP = randi( geo(i) );
-        NL = randi( geo(i) );
-        NA = randi( geo(i) );
+        NP = randi( 4 );
+        NL = randi( 4 );
+        NA = randi( 4 );
         
         [ R P L A ] = RandomGeometry( NR, NP, NL, NA, geoFileName );
         
@@ -61,16 +59,10 @@ for i = 1:length( geo )
         try
             T_Calc = LinearObjectRegistration( geoFileName, logFileName, EstimateNoise( NoisePoint ) );
         catch exception
-            continue;
+            if ( strcmp( exception.identifier, 'Matching' ) )
+                fails( j, i ) = 1;
+            end
         end
-        
-        % Determine the standard error of rotation and translation
-        IT = inv(T);
-        
-        ER(j,i) = sqrt( sum( sum( ( IT(1:3,1:3) - T_Calc(1:3,1:3) ) .^ 2 ) ) / 9 );
-        ET(j,i) = sqrt( sum( sum( ( IT(1:3,4) - T_Calc(1:3,4) ) .^ 2 ) ) / 3 );
-               
-        disp( [ 'ER: ', num2str( ER(j,i) ), ', ET: ', num2str( ET(j,i) ) ] );
         
     end % for
 end %for

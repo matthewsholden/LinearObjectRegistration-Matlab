@@ -8,7 +8,7 @@
 function H = LinearObjectLeastSquares( XYZ, noise )
 
 %Determine if it is a plane, line or point
-THRESHOLD = max( 2, 2 * ( noise ^ 2 ) );
+THRESHOLD = max( 0.5, 2 * ( noise ^ 2 ) );
 
 % First, calculate the centroid of the point cloud
 basePoint = mean( XYZ, 1 )';
@@ -25,8 +25,15 @@ dof = size( evector, 2 );
 
 
 % If we are at a plane
-if ( dof >= 2 )    
-    H = Plane( basePoint, basePoint + evector(:,1), basePoint + evector(:,2) );   
+if ( dof > 2 )
+    evector = [ evector', evalues ];
+    evector = sortrows( evector, - size( evector, 1 ) );
+    evector = evector( 1:2, 1:(end-1) )';
+    dof = 2;
+end
+
+if ( dof == 2 )
+    H = Plane( basePoint, basePoint + evector(:,1), basePoint + evector(:,2) );
 end %if
 
 % If we are at a line

@@ -5,13 +5,17 @@
 % Parameter RR: The recorded cell array of references
 % Parameters GLO: The geometry cell array of linear objects
 % Parameters RLO: The recorded cell array of linear objects
+% Parameters RXYZ: The recorded cell array of collected points
+% Parameter noise: The noise asociated with data recording
 
 % Return GMLO: The matched cell array of geometry linear objects
 % Return RMLO: The matched cell array of recorded linear objects
-function [ GMLO, RMLO ] = LinearObjectMatch( GR, RR, GLO, RLO )
+% Return RMXYZ: The matched cell array of collected points
+function [ GMLO, RMLO, RMXYZ ] = LinearObjectMatch( GR, RR, GLO, RLO, RXYZ, noise )
 
 GMLO = cell( 0, 1 );
 RMLO = cell( 0, 1 );
+RMXYZ = cell( 0, 1 );
 
 while ( numel( RLO ) > 0 && numel( GLO ) > 0 )
     
@@ -24,7 +28,7 @@ while ( numel( RLO ) > 0 && numel( GLO ) > 0 )
     end
         
     % Find the optimal pair
-    [ optIndexG, optIndexR ] = OptimalSinglePair( GLO, RLO );
+    [ optIndexG, optIndexR ] = OptimalSinglePair( GLO, RLO, noise );
     
     % Project all of the current references onto the optimal linear object
     % Note that "OptimalProjection" already cats it
@@ -34,9 +38,11 @@ while ( numel( RLO ) > 0 && numel( GLO ) > 0 )
     % Add optimal pair to matched linear objects    
     GMLO = cat( 1, GMLO, { GLO{ optIndexG } } );
     RMLO = cat( 1, RMLO, { RLO{ optIndexR } } );
+    RMXYZ = cat( 1, RMXYZ, { RXYZ{ optIndexR } } );
     
     % Remove optimal pair from the previous cell arrays
     GLO = cat( 1, GLO( 1:optIndexG - 1 ), GLO( optIndexG + 1:end ) );
     RLO = cat( 1, RLO( 1:optIndexR - 1 ), RLO( optIndexR + 1:end ) );
+    RXYZ = cat( 1, RXYZ( 1:optIndexR - 1 ), RXYZ( optIndexR + 1:end ) );
     
 end
