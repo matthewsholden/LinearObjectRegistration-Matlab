@@ -11,11 +11,14 @@ function RecordLogToGeometryTransform = LinearObjectRegistration( GeometryFileNa
 DIRECTION_SCALE = 100;
 
 % Read from file and recover all the hyperplanes
+totalTic = tic;
 [ GR GP GL GA ] = GeometryRead( GeometryFileName );
 
 % Read from file the recordlog
 % Pre-segmented
+readTic = tic;
 [ XYZ, RXYZ ] = RecordLogReadAnnotations( RecordLogFileName );
+toc( readTic );
 % Not pre-segmented
 %[ XYZ ] = RecordLogRead( RecordLogFileName );
 %[ XYZ, RXYZ ] = HyperplaneExtract( XYZ, size(GR,1) );
@@ -29,8 +32,6 @@ XYZR = cell( 0, 1 );
 XYZP = cell( 0, 1 );
 XYZL = cell( 0, 1 );
 XYZA = cell( 0, 1 );
-
-
 
 for i = 1:numel(XYZ)
 
@@ -111,8 +112,8 @@ XYZRM = XYZR;
 
 
 % Find the closest point for both sets
-GeometryCentroid = LinearObjectCentroid( GPM, GLM, GAM )
-RecordLogCentroid = LinearObjectCentroid( RPM, RLM, RAM )
+GeometryCentroid = LinearObjectCentroid( GPM, GLM, GAM );
+RecordLogCentroid = LinearObjectCentroid( RPM, RLM, RAM );
 
 
 
@@ -275,4 +276,6 @@ RecordLogToGeometryTranslation = GeometryCentroid - estimatedRotation * ( Record
 RecordLogToGeometryTransform = eye(4);
 RecordLogToGeometryTransform(1:3,1:3) = estimatedRotation;
 RecordLogToGeometryTransform(1:3,4) = RecordLogToGeometryTranslation;
+
+toc( totalTic );
 

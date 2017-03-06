@@ -25,7 +25,7 @@ for i = 1:length( noise )
         
         % Generate random geometry
         
-        NR = maxGeo;
+        NR = 2;
         NP = randi( maxGeo );
         NL = randi( maxGeo );
         NA = randi( maxGeo );
