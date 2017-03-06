@@ -16,12 +16,10 @@ totalTic = tic;
 
 % Read from file the recordlog
 % Pre-segmented
-readTic = tic;
 [ XYZ, RXYZ ] = RecordLogReadAnnotations( RecordLogFileName );
-toc( readTic );
 % Not pre-segmented
-%[ XYZ ] = RecordLogRead( RecordLogFileName );
-%[ XYZ, RXYZ ] = HyperplaneExtract( XYZ, size(GR,1) );
+[ XYZ ] = RecordLogRead( RecordLogFileName );
+[ RXYZ, XYZ, DOF ] = LinearObjectExtract( XYZ, size(GR,1) );
 
 % Find equations of the linear objects
 RR = cell( 0, 1 );
@@ -34,8 +32,7 @@ XYZL = cell( 0, 1 );
 XYZA = cell( 0, 1 );
 
 for i = 1:numel(XYZ)
-
-    LO = LinearObjectLeastSquares( XYZ{i}, noise );
+    LO = LinearObjectLeastSquares( XYZ{i}, DOF(i) );
     
     if ( isa( LO, 'Point' ) )
         RP = cat( 1, RP, {LO} );
@@ -52,7 +49,7 @@ end %for
 
 for i = 1:numel(RXYZ)
     
-    LO = LinearObjectLeastSquares( RXYZ{i}, noise  );
+    LO = LinearObjectLeastSquares( RXYZ{i}, 0 );
     
     if ( isa( LO, 'Point' ) )
         RR = cat( 1, RR, { Reference( '1', LO.point ) } );
