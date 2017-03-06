@@ -27,7 +27,7 @@ classdef Plane
         end %function
         
         function distance = DistanceToPoint( A, point )
-            distance = abs( dot( A.GetNormal, A.basePoint - point ) );
+            distance = abs( dot( A.GetNormal(), A.basePoint - point ) );
         end %function
         
         function point = ProjectPoint( A, point )

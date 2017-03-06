@@ -11,11 +11,12 @@ function RecordLogToGeometryTransform = LinearObjectRegistration( GeometryFileNa
 DIRECTION_SCALE = 100;
 
 % Read from file and recover all the hyperplanes
+totalTic = tic;
 [ GR GP GL GA ] = GeometryRead( GeometryFileName );
 
 % Read from file the recordlog
 % Pre-segmented
-%[ XYZ, RXYZ ] = RecordLogReadAnnotations( RecordLogFileName );
+[ XYZ, RXYZ ] = RecordLogReadAnnotations( RecordLogFileName );
 % Not pre-segmented
 [ XYZ ] = RecordLogRead( RecordLogFileName );
 [ RXYZ, XYZ, DOF ] = LinearObjectExtract( XYZ, size(GR,1) );
@@ -30,10 +31,7 @@ XYZP = cell( 0, 1 );
 XYZL = cell( 0, 1 );
 XYZA = cell( 0, 1 );
 
-
-
 for i = 1:numel(XYZ)
-    
     LO = LinearObjectLeastSquares( XYZ{i}, DOF(i) );
     
     if ( isa( LO, 'Point' ) )
@@ -60,10 +58,10 @@ for i = 1:numel(RXYZ)
     
 end %for
 
-% disp( [ 'References: ', num2str( size(RR,1) ) ] );
-% disp( [ 'Points: ', num2str( size(RP,1) ) ] );
-% disp( [ 'Lines: ', num2str( size(RL,1) ) ] );
-% disp( [ 'Planes: ', num2str( size(RA,1) ) ] );
+disp( [ 'References: ', num2str( size(RR,1) ) ] );
+disp( [ 'Points: ', num2str( size(RP,1) ) ] );
+disp( [ 'Lines: ', num2str( size(RL,1) ) ] );
+disp( [ 'Planes: ', num2str( size(RA,1) ) ] );
 
 
 % Find the signatures for all planes, lines and points in both
@@ -92,8 +90,20 @@ end %for
 [ RAM, GAM ] = SignatureMatch( RA, GA );
 [ RLM, GLM ] = SignatureMatch( RL, GL );
 [ RPM, GPM ] = SignatureMatch( RP, GP );
+XYZAM = XYZA;
+XYZLM = XYZL;
+XYZPM = XYZP;
+
+% % For TESTING only!!!
+% RecordLogToGeometryTransform = zeros( 4 );
+% return;
+
+%[ GAM, RAM, XYZAM ] = LinearObjectMatch( GR, RR, GA, RA, XYZA, noise );
+%[ GLM, RLM, XYZLM ] = LinearObjectMatch( GR, RR, GL, RL, XYZL, noise );
+%[ GPM, RPM, XYZPM ] = LinearObjectMatch( GR, RR, GP, RP, XYZP, noise );
 RRM = RR;
 GRM = GR;
+XYZRM = XYZR;
 % Note: The order of the recorded cell arrays is not changed, so XYZ cell
 % arrays are already in the correct order
 
@@ -133,16 +143,16 @@ for i = 1:numel(RRM)
 end %for
 
 for i = 1:numel(XYZA)
-    XYZA{i} = bsxfun( @minus, XYZA{i}, RecordLogCentroid' );
+    XYZAM{i} = bsxfun( @minus, XYZAM{i}, RecordLogCentroid' );
 end %for
 for i = 1:numel(XYZL)
-    XYZL{i} = bsxfun( @minus, XYZL{i}, RecordLogCentroid' );
+    XYZLM{i} = bsxfun( @minus, XYZLM{i}, RecordLogCentroid' );
 end %for
 for i = 1:numel(XYZP)
-    XYZP{i} = bsxfun( @minus, XYZP{i}, RecordLogCentroid' );
+    XYZPM{i} = bsxfun( @minus, XYZPM{i}, RecordLogCentroid' );
 end %for
 for i = 1:numel(XYZR)
-    XYZR{i} = bsxfun( @minus, XYZR{i}, RecordLogCentroid' );
+    XYZRM{i} = bsxfun( @minus, XYZRM{i}, RecordLogCentroid' );
 end %for
 
 
@@ -185,14 +195,9 @@ RADV = cell( 0, 1 );
 RLDV = cell( 0, 1 );
 
 
-for i = 1:numel(GAM)
-    GADV = cat( 1, GADV, { Point( DIRECTION_SCALE * GAM{i}.GetNormal() ) } );
-end %for
-for i = 1:numel(GLM)
-    GLDV = cat( 1, GLDV, { Point( DIRECTION_SCALE * GLM{i}.GetDirection() ) } );
-end %for
-
-for i = 1:numel(RAM)
+% Observe that numel( GAM ) == numel( RAM )
+for i = 1:numel(RAM)   
+    
     % Produce the two candidate vectors
     RADV_Temp{1} = Point( RABP{i}.point + DIRECTION_SCALE * RAM{i}.GetNormal() );
     RADV_Temp{1} = RADV_Temp{1}.Signature( RRM );
@@ -204,10 +209,19 @@ for i = 1:numel(RAM)
     
     [ ~, RADV_Match ] = SignatureMatch( GADV_Temp, RADV_Temp );
     
-    RADV = cat( 1, RADV, { Point( RADV_Match{1}.point - RABP{i}.point ) } );
+    % Only add direction vector if there is a convincing match
+    for j = 1:numel( GRM )
+        dotCheck = dot( GAM{i}.GetNormal(), normc( GABP{i}.point - GRM{j}.point ) );
+        if ( abs( dotCheck ) > 0.1 )
+            RADV = cat( 1, RADV, { Point( RADV_Match{1}.point - RABP{i}.point ) } );
+            GADV = cat( 1, GADV, { Point( DIRECTION_SCALE * GAM{i}.GetNormal() ) } );
+            break;
+        end
+    end
+    
 end %for
 for i = 1:numel(GLM)
-        % Produce the two candidate vectors
+    % Produce the two candidate vectors
     RLDV_Temp{1} = Point( RLBP{i}.point + DIRECTION_SCALE * RLM{i}.GetDirection() );
     RLDV_Temp{1} = RLDV_Temp{1}.Signature( RRM );
     RLDV_Temp{2} = Point( RLBP{i}.point - DIRECTION_SCALE * RLM{i}.GetDirection() );
@@ -218,7 +232,16 @@ for i = 1:numel(GLM)
     
     [ ~, RLDV_Match ] = SignatureMatch( GLDV_Temp, RLDV_Temp );
     
-    RLDV = cat( 1, RLDV, { Point( RLDV_Match{1}.point - RLBP{i}.point ) } );
+    % Only add direction vector if there is a convincing match
+    for j = 1:numel( GRM )
+        dotCheck = dot( GLM{i}.GetDirection(), normc( GLBP{i}.point - GRM{j}.point ) );
+        if (  abs( dotCheck ) > 0.1 )
+            RLDV = cat( 1, RLDV, { Point( RLDV_Match{1}.point - RLBP{i}.point ) } );
+            GLDV = cat( 1, GLDV, { Point( DIRECTION_SCALE * GLM{i}.GetDirection() ) } );
+            break;       
+        end
+    end
+    
 end %for
 
 
@@ -242,11 +265,14 @@ RecordLogPoints = cat( 1, RecordLogPoints, RLDV );
 
 
 % Now, finally, perform point-to-point registration
-RecordLogToGeometryRotation = SphericalRegistration( GeometryPoints, RecordLogPoints );
-RecordLogToGeometryRotation = LinearObjectICP( GPM, GLM, GAM, XYZP, XYZL, XYZA, RecordLogToGeometryRotation );
+estimatedRotation = SphericalRegistration( GeometryPoints, RecordLogPoints );
+adjustedTranslation = zeros( size( RecordLogCentroid ) );
+[ adjustedTranslation, estimatedRotation ] = LinearObjectICP( GPM, GLM, GAM, XYZPM, XYZLM, XYZAM, estimatedRotation );
 
-RecordLogToGeometryTranslation = GeometryCentroid - RecordLogToGeometryRotation * RecordLogCentroid;
+RecordLogToGeometryTranslation = GeometryCentroid - estimatedRotation * ( RecordLogCentroid + adjustedTranslation );
 RecordLogToGeometryTransform = eye(4);
-RecordLogToGeometryTransform(1:3,1:3) = RecordLogToGeometryRotation;
+RecordLogToGeometryTransform(1:3,1:3) = estimatedRotation;
 RecordLogToGeometryTransform(1:3,4) = RecordLogToGeometryTranslation;
+
+toc( totalTic );
 

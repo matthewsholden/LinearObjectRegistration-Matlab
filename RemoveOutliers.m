@@ -7,7 +7,7 @@
 % Return filterPoints: The set of points with no outliers
 function filterPoints = RemoveOutliers( LO, points )
 
-NUMSTDEV = 5;
+NUMSTDEV = 100;
 THRESHOLD = 1e-6; % Deal with the case of small noise
 
 % Iterate until no more outliers exist
